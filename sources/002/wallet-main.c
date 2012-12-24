@@ -1,28 +1,4 @@
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-int
-compare_int(const void *a, const void *b) {
-  return *(int*)a - *(int*)b;
-}
-
-int
-coinCount (const int change) {
-  if (change >= 500) {
-    return coinCount(change - 500) + 1;
-  } else if (change >= 100) {
-    return coinCount(change - 100) + 1;
-  } else if (change >= 50) {
-    return coinCount(change - 50) + 1;
-  } else if (change >= 10) {
-    return coinCount(change - 10) + 1;
-  } else if (change >= 5) {
-    return coinCount(change - 5) + 1;
-  }
-  return change;
-}
+#include "wallet.h"
 
 int
 main(int argc, char* argv[]) {
@@ -53,8 +29,10 @@ main(int argc, char* argv[]) {
   coinLen = coinCnt;
   combinationMax = pow(2, coinLen);
 #ifdef DEBUG
-  fprintf(stdout, "coinCnt/%d\n", coinCnt);
-  fprintf(stdout, "coinLen/%d\n", coinLen);
+  fprintf(stdout, "       coinCnt/%12d\n", coinCnt);
+  fprintf(stdout, "       coinLen/%12d\n", coinLen);
+  fprintf(stdout, "combinationMax/%12d\n", combinationMax);
+  fprintf(stdout, "       INT_MAX/%12d\n", INT_MAX);
 #endif 
 
   int cnt = 0;
@@ -90,7 +68,13 @@ main(int argc, char* argv[]) {
     }
     combinationLen = combinationLen * 2;
     free(tmp);
+#ifdef DEBUG
+    fprintf(stdout, "%d ", i);
+#endif
   }
+#ifdef DEBUG
+    fprintf(stdout, "\n");
+#endif
 
   qsort(combination, combinationLen, sizeof(int), compare_int);
 
@@ -99,7 +83,6 @@ main(int argc, char* argv[]) {
    */
   int *change;
   change = (int*) calloc (combinationLen, sizeof(int));
-  //memcpy(change, combination, combinationLen * sizeof(int));
   for (int i = 0; i < combinationLen; i++) {
     change[i] = combination[i] - price;
   }
